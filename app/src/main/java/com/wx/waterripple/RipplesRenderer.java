@@ -14,16 +14,17 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-public class RajawaliRipplesRenderer extends RajawaliRenderer {
+public class RipplesRenderer extends RajawaliRenderer {
     private TouchRippleFilter mFilter;
     private long frameCount;
     private final int QUAD_SEGMENTS = 40;
 
-    public RajawaliRipplesRenderer(Context context) {
+    public RipplesRenderer(Context context) {
         super(context);
         setFrameRate(60);
     }
 
+    @Override
     protected void initScene() {
         mCamera.setPosition(0, 0, -10);
 
@@ -31,8 +32,9 @@ public class RajawaliRipplesRenderer extends RajawaliRenderer {
         light.setPower(1f);
 
         SimpleMaterial planeMat = new SimpleMaterial();
-        Bitmap texture = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.utrecht);
+        Bitmap texture = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.image_0);
         planeMat.addTexture(mTextureManager.addTexture(texture));
+
         Plane plane = new Plane(4, 4, 1, 1);
         plane.setRotZ(-90);
         plane.setScale(3.7f);
@@ -46,18 +48,19 @@ public class RajawaliRipplesRenderer extends RajawaliRenderer {
         addPostProcessingFilter(mFilter);
     }
 
+    @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        ((RajawaliExampleActivity) mContext).showLoader();
         super.onSurfaceCreated(gl, config);
         mFilter.setScreenSize(mViewportWidth, mViewportHeight);
-        ((RajawaliExampleActivity) mContext).hideLoader();
     }
 
+    @Override
     public void onDrawFrame(GL10 glUnused) {
         super.onDrawFrame(glUnused);
         mFilter.setTime((float) frameCount++ * .05f);
     }
 
+    @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         super.onSurfaceChanged(gl, width, height);
         mFilter.setScreenSize(width, height);

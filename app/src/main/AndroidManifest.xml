@@ -11,14 +11,14 @@
         android:theme="@style/AppTheme"
         android:allowBackup="false">
 
-        <activity android:name=".RajawaliRipplesActivity">
+        <activity android:name=".RipplesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".RajawaliExampleActivity"/>
+        <activity android:name=".BaseActivity"/>
     </application>
 
 </manifest>
