@@ -1,5 +1,7 @@
 package com.wx.waterripple;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
@@ -13,6 +15,12 @@ import android.widget.TextView;
 public class RipplesActivity extends BaseActivity implements OnTouchListener {
     private RipplesRenderer mRenderer;
     private Point mScreenSize;
+
+    private int[] bitmapResource = new int[] {
+      R.drawable.image_0, R.drawable.image_1, R.drawable.image_2
+    };
+
+    private int index = 1;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +50,10 @@ public class RipplesActivity extends BaseActivity implements OnTouchListener {
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            mRenderer.setTouch(event.getX() / mScreenSize.x, 1.0f - (event.getY() / mScreenSize.y));
+            index ++;
+            index %= bitmapResource.length;
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), bitmapResource[index]);
+            mRenderer.setTouch(event.getX() / mScreenSize.x, 1.0f - (event.getY() / mScreenSize.y), bitmap);
         }
         return super.onTouchEvent(event);
     }

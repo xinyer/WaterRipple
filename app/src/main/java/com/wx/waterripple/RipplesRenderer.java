@@ -19,6 +19,10 @@ public class RipplesRenderer extends RajawaliRenderer {
     private long frameCount;
     private final int QUAD_SEGMENTS = 40;
 
+    private boolean touch = false;
+    private Plane plane;
+    private Bitmap bitmap;
+
     public RipplesRenderer(Context context) {
         super(context);
         setFrameRate(60);
@@ -32,17 +36,17 @@ public class RipplesRenderer extends RajawaliRenderer {
         light.setPower(1f);
 
         SimpleMaterial planeMat = new SimpleMaterial();
-        Bitmap texture = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.image_0);
-        planeMat.addTexture(mTextureManager.addTexture(texture));
+        bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.image_0);
+        planeMat.addTexture(mTextureManager.addTexture(bitmap));
 
-        Plane plane = new Plane(4, 4, 1, 1);
+        plane = new Plane(4, 4, 1, 1);
         plane.setRotZ(-90);
         plane.setScale(3.7f);
         plane.setMaterial(planeMat);
         addChild(plane);
 
         mFilter = new TouchRippleFilter();
-        mFilter.setRippleSize(62);
+        mFilter.setRippleSize(60);
         mPostProcessingRenderer.setQuadSegments(QUAD_SEGMENTS);
         mPostProcessingRenderer.setQuality(PostProcessingQuality.LOW);
         addPostProcessingFilter(mFilter);
@@ -58,6 +62,12 @@ public class RipplesRenderer extends RajawaliRenderer {
     public void onDrawFrame(GL10 glUnused) {
         super.onDrawFrame(glUnused);
         mFilter.setTime((float) frameCount++ * .05f);
+        if (touch) {
+            SimpleMaterial planeMat = new SimpleMaterial();
+            planeMat.addTexture(mTextureManager.addTexture(bitmap));
+            plane.setMaterial(planeMat, false);
+            touch = false;
+        }
     }
 
     @Override
@@ -66,7 +76,10 @@ public class RipplesRenderer extends RajawaliRenderer {
         mFilter.setScreenSize(width, height);
     }
 
-    public void setTouch(float x, float y) {
+    public void setTouch(float x, float y, Bitmap bitmap) {
+        touch = true;
+        this.bitmap.recycle();
+        this.bitmap = bitmap;
         mFilter.addTouch(x, y, frameCount * .05f);
     }
 }
